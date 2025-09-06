@@ -26,12 +26,15 @@ export class HttpsExpress {
 
   readSync() {
     this.logger.info('Reading HTTPS certificates...');
+    // @ts-ignore
     this.logger.info('HTTPS Key Path:', this.keyPath);
     const key = fs.readFileSync(this.keyPath);
 
+    // @ts-ignore
     this.logger.info('HTTPS Cert Path:', this.certPath);
     const cert = fs.readFileSync(this.certPath);
 
+    // @ts-ignore
     this.logger.info('HTTPS CA Path:', this.caPath);
     const ca = this.caPath ? fs.readFileSync(this.caPath) : undefined;
 

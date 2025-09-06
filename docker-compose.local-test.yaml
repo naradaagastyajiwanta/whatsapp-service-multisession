@@ -1,0 +1,44 @@
+services:
+  waha-multi-session:
+    # Use existing WAHA image but mount our modified code
+    image: devlikeapro/waha:latest
+    container_name: waha-multi-session
+    restart: unless-stopped
+    
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+
+    ports:
+      - '127.0.0.1:3000:3000/tcp'
+
+    volumes:
+      # Mount our compiled multi-session code over the container's code
+      - './dist:/app/dist'
+      # Session storage
+      - './sessions:/app/.sessions'
+      # Media storage  
+      - './media:/app/.media'
+
+    environment:
+      # Force WAHA CORE version with our multi-session implementation
+      - WAHA_VERSION=CORE
+      # Engine configuration
+      - WHATSAPP_DEFAULT_ENGINE=WEBJS
+      # Debug settings
+      - WAHA_DEBUG_MODE=true
+      - WHATSAPP_PRINT_QR=true
+      # API settings
+      - WHATSAPP_API_HOSTNAME=localhost
+      - WHATSAPP_API_PORT=3000
+      # Media settings
+      - WHATSAPP_DOWNLOAD_MEDIA=true
+      # Security (disabled for testing)
+      # - WAHA_API_KEY=""
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s

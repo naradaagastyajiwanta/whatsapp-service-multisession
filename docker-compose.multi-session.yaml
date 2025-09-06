@@ -1,0 +1,75 @@
+services:
+  waha-multi-session:
+    # Use existing WAHA image with our multi-session code mounted
+    image: devlikeapro/waha:latest
+    container_name: waha-multi-session
+    restart: unless-stopped
+    
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+
+    ports:
+      - '127.0.0.1:3000:3000/tcp'
+
+    volumes:
+      # Mount our compiled multi-session code
+      - './dist:/app/dist'
+      # Session storage - each session gets isolated directory
+      - './sessions:/app/.sessions'
+      # Media storage  
+      - './media:/app/.media'
+
+    environment:
+      # WAHA Configuration
+      - WAHA_VERSION=CORE                    # Force CORE version with our multi-session code
+      - WHATSAPP_DEFAULT_ENGINE=WEBJS        # Use WebJS engine
+      
+      # Debug & Logging
+      - WAHA_DEBUG_MODE=false                # Set to true for debugging
+      - WHATSAPP_PRINT_QR=true               # Print QR codes to console
+      
+      # API Configuration
+      - WHATSAPP_API_HOSTNAME=localhost      # API hostname
+      - WHATSAPP_API_PORT=3000               # API port
+      
+      # Media Configuration
+      - WHATSAPP_DOWNLOAD_MEDIA=true         # Enable media download
+      - WHATSAPP_FILES_MIMETYPES=image/jpeg,image/png,image/gif,image/webp,video/mp4,audio/mpeg,audio/ogg
+      
+      # Security Configuration
+      # - WAHA_API_KEY=your-secret-key       # Uncomment and set for production
+      
+      # Multi-Session Configuration
+      - WHATSAPP_START_SESSION=""            # Auto-start sessions (comma separated)
+      - WHATSAPP_RESTART_ALL_SESSIONS=false  # Don't restart all sessions on startup
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/version"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+      
+    # Resource limits for production
+    deploy:
+      resources:
+        limits:
+          memory: 2G
+          cpus: '2.0'
+        reservations:
+          memory: 512M
+          cpus: '0.5'
+
+# Optional: Add monitoring
+  # watchtower:
+  #   image: containrrr/watchtower
+  #   volumes:
+  #     - /var/run/docker.sock:/var/run/docker.sock
+  #   command: waha-multi-session --interval 3600
+
+volumes:
+  sessions_data:
+    driver: local
+  media_data:
+    driver: local

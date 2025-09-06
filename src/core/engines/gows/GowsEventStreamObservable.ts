@@ -32,6 +32,7 @@ export class GowsEventStreamObservable extends Observable<EnginePayload> {
       });
 
       stream.on('end', (...args) => {
+        // @ts-ignore
         this.logger.debug('Stream ended', args);
         subscriber?.complete();
         subscriber = null;

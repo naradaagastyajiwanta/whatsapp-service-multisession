@@ -1,0 +1,52 @@
+services:
+  waha-multi-session-test:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        USE_BROWSER: chromium
+        WHATSAPP_DEFAULT_ENGINE: WEBJS
+    container_name: waha-multi-session-test
+    restart: unless-stopped
+    
+    # Add DNS if needed
+    dns:
+      - 1.1.1.1
+      - 8.8.8.8
+
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '100m'
+        max-file: '10'
+
+    ports:
+      - '127.0.0.1:3000:3000/tcp'
+
+    volumes:
+      # Store sessions in the .sessions folder
+      - './sessions:/app/.sessions'
+      # Save media files  
+      - './media:/app/.media'
+
+    environment:
+      # Force WAHA CORE version to use our multi-session implementation
+      - WAHA_VERSION=CORE
+      # Set engine
+      - WHATSAPP_DEFAULT_ENGINE=WEBJS
+      # Enable debug mode for testing
+      - WAHA_DEBUG_MODE=true
+      # Print QR codes
+      - WHATSAPP_PRINT_QR=true
+      # Set API hostname
+      - WHATSAPP_API_HOSTNAME=localhost
+      - WHATSAPP_API_PORT=3000
+      # Download media
+      - WHATSAPP_DOWNLOAD_MEDIA=true
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

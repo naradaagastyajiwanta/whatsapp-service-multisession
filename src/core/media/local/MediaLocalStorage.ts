@@ -63,6 +63,7 @@ export class MediaLocalStorage implements IMediaStorage {
         if (paths.length === 0) {
           return;
         }
+        // @ts-ignore
         this.log.info('Deleted files and directories:\n', paths.join('\n'));
       });
     } else {

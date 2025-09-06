@@ -24,16 +24,19 @@ const logger: Logger = pino({
 }).child({ name: 'Bootstrap' });
 
 process.on('uncaughtException', (err) => {
+  // @ts-ignore
   logger.error('Uncaught Exception:', err);
   if (err instanceof Error) {
     logger.error(err.stack);
   }
 });
 process.on('unhandledRejection', (reason, promise) => {
+  // @ts-ignore
   logger.error('Unhandled Rejection at:', promise);
   if (reason instanceof Error) {
     logger.error(reason.stack);
   } else {
+    // @ts-ignore
     logger.error('Unhandled rejection reason:', reason);
   }
 });

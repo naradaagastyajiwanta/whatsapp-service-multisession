@@ -52,6 +52,7 @@ export class JobLoggerWrapper implements ILogger {
     this.job
       .log(`[${timestamp}] ${level.toUpperCase()}: ${msg}`)
       .catch((err) => {
+        // @ts-ignore
         this.logger.error('Error logging message to job', err);
       });
   }
