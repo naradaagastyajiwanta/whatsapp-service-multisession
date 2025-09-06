@@ -1,0 +1,74 @@
+{
+  "name": "WAHA - WhatsApp HTTP API",
+  "description": "WhatsApp HTTP API that you can install on your own server",
+  "website": "https://waha.devlike.pro/",
+  "repository": "https://github.com/devlikeapro/waha",
+  "logo": "https://raw.githubusercontent.com/devlikeapro/waha/core/logo.png",
+  "keywords": ["whatsapp", "api", "http", "rest", "nodejs", "typescript"],
+  "stack": "heroku-22",
+  "buildpacks": [
+    {
+      "url": "https://github.com/jontewks/puppeteer-heroku-buildpack"
+    },
+    {
+      "url": "heroku/nodejs"
+    }
+  ],
+  "formation": {
+    "web": {
+      "quantity": 1,
+      "size": "standard-1x"
+    }
+  },
+  "env": {
+    "NODE_ENV": {
+      "description": "Node.js environment",
+      "value": "production",
+      "required": true
+    },
+    "WAHA_API_KEY": {
+      "description": "API key for securing your WAHA instance",
+      "value": "your-secret-api-key",
+      "required": true
+    },
+    "WAHA_DASHBOARD_ENABLED": {
+      "description": "Enable dashboard UI",
+      "value": "true",
+      "required": false
+    },
+    "WAHA_DASHBOARD_USERNAME": {
+      "description": "Dashboard username",
+      "value": "admin",
+      "required": false
+    },
+    "WAHA_DASHBOARD_PASSWORD": {
+      "description": "Dashboard password",
+      "value": "admin",
+      "required": false
+    },
+    "WHATSAPP_SWAGGER_ENABLED": {
+      "description": "Enable Swagger API documentation",
+      "value": "true",
+      "required": false
+    },
+    "WHATSAPP_SWAGGER_USERNAME": {
+      "description": "Swagger username",
+      "value": "admin",
+      "required": false
+    },
+    "WHATSAPP_SWAGGER_PASSWORD": {
+      "description": "Swagger password",
+      "value": "admin",
+      "required": false
+    },
+    "WHATSAPP_DEFAULT_ENGINE": {
+      "description": "WhatsApp engine (WEBJS, GOWS, or NOWEB)",
+      "value": "WEBJS",
+      "required": false
+    }
+  },
+  "addons": [],
+  "scripts": {
+    "postdeploy": "echo 'WAHA deployed successfully!'"
+  }
+}
