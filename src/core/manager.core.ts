@@ -405,7 +405,8 @@ export class SessionManagerCore extends SessionManager implements OnModuleInit {
     this.sessionMediaManagers.delete(name);
     this.sessionConfigs.delete(name);
     this.stopSessionEvents(name);
-    this.sessions.set(name, SessionStatus.REMOVED);
+    // Actually remove the session from Map instead of just setting status
+    this.sessions.delete(name);
     this.updateSession(name);
   }
 
